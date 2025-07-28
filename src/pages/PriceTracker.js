@@ -1,76 +1,80 @@
-
 import {
   Box,
   Paper,
   TextField,
   InputAdornment,
-  IconButton,
   Typography,
-  Stack,
+  Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import MicIcon from '@mui/icons-material/MicRounded';
-// Add other icons as required
-
+import priceComparisonLogo from '../utils/Images/priceComparison.png'; // Update the path if necessary
+import image from '../utils/Images/illastration.png'; // Update the path if necessary
+import backgroundImage from '../utils/Images/image.png'; // Update the path if necessary
 export default function PriceTracker() {
   return (
     <Box
-      sx={{
-        minHeight: '100vh',
-        width: '100vw',
-        bgcolor: '#fdfdfa',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {/* Logo / Title */}
-      <Typography
-        variant="h4"
-        component="div"
-        fontWeight={500}
+  sx={{
+    minHeight: '100vh',
+    width: '100vw',
+    bgcolor: '#fdfdfa',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 4,
+    // backgroundColor:'',
+    // backgroundImage: {backgroundImage},
+    // backgroundSize: 'cover', // Ensures the image covers the entire page
+    // backgroundPosition: 'center', // Centers the image
+    // backgroundRepeat: 'no-repeat', // Prevents the image from repeating
+  }}
+>
+      {/* Header */}
+      <Box
         sx={{
-          mb: 4,
-          letterSpacing: 1,
+          width: '100%',
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: 'column',
+    alignItems: 'center', // Center horizontally
+    justifyContent: 'center',
+          marginBottom: 4,
         }}
       >
-        Price Tracker
-        <Box
-          component="span"
-          sx={{
-            ml: 1,
-            px: 1.5,
-            py: 0.5,
-            fontSize: '0.90rem',
-            background: '#e6f0fa',
-            color: '#1976d2',
-            borderRadius: '12px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            display: 'inline-block',
-            letterSpacing: 0.5,
-          }}
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ display: 'flex', alignItems: 'center' }}
         >
-          pro
-        </Box>
-      </Typography>
-      {/* Search Field */}
+          <Box
+            component="img"
+            src={priceComparisonLogo}
+            alt="Price Tracker Logo"
+            sx={{
+              width: 32,
+              height: 32,
+              marginRight: 1,
+            }}
+          />
+          PRICE TRACKER
+        </Typography>
+        {/* <Button variant="text" sx={{ fontWeight: 'bold' }}>
+          Login / Sign Up
+        </Button> */}
+      </Box>
+
+      {/* Search Bar */}
       <Paper
         elevation={3}
         sx={{
-          px: 3,
-          py: 2.5,
+          width: '100%',
+          maxWidth: 600,
+          padding: 2,
           borderRadius: '16px',
-          boxShadow: '0 0 24px rgba(0,0,0,0.06)',
-          display: 'flex',
-          alignItems: 'center',
+          marginBottom: 4,
         }}
       >
         <TextField
-          placeholder="Ask anything or @mention a Space"
+          placeholder="Search for a product..."
           variant="outlined"
           fullWidth
           InputProps={{
@@ -79,35 +83,43 @@ export default function PriceTracker() {
                 <SearchIcon color="action" />
               </InputAdornment>
             ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <Stack direction="row" spacing={1}>
-                  
-                  <IconButton size="small" aria-label="voice input" >
-                    <MicIcon />
-                  </IconButton>
-                </Stack>
-              </InputAdornment>
-            ),
-            sx: { py: 0.5 },
-          }}
-          sx={{
-            minWidth: 380,
-            borderRadius: 2,
-            bgcolor: '#f6f7f9',
-            '& .MuiOutlinedInput-root': {
-              borderRadius: 2,
-              bgcolor: '#f6f7f9',
-              pr: 0,
-              pl: 0,
-            },
-            '& input': {
-              py: 1.2,
-              fontSize: '1.1rem',
-            },
           }}
         />
       </Paper>
+
+      {/* Main Content */}
+      <Box
+  sx={{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 800,
+    marginTop: 4, // Add spacing if needed
+  }}
+>
+  {/* Left Side: Text Content */}
+  <Box sx={{ flex: 1, textAlign: 'left', paddingRight: 2 }}>
+    <Typography variant="h4" fontWeight="bold" gutterBottom>
+      Track Prices. Save Money. Shop Smart.
+    </Typography>
+    <Typography variant="body1" sx={{ marginBottom: 2 }}>
+      Compare prices across your favorite stores instantly.
+    </Typography>
+    <Button variant="contained" color="primary">
+      Start Tracking
+    </Button>
+  </Box>
+
+  {/* Right Side: Image */}
+  <Box
+    component="img"
+    src={image} // Replace with your desired image URL
+    alt="Illustration"
+    sx={{ maxWidth: 300, flex: 1 }}
+  />
+</Box>
     </Box>
   );
 }
