@@ -1,0 +1,12 @@
+[
+  {
+    "site": "Amazon",
+    "productUrl": "https://www.amazon.in/dp/B0BZ7YJ7JY",
+    "productName": "Samsung Galaxy S25 Ultra 256GB",
+    "price": "117999",
+    "rating": "4.5",
+    "imageUrls": [
+      "https://images-na.ssl-images.amazon.com/images/I/81XYZ12345L.jpg"
+    ]
+  }
+]

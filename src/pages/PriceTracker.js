@@ -2,47 +2,54 @@ import React, { useState } from "react";
 import {
   Box,
   Paper,
-  TextField,
-  InputAdornment,
   Typography,
   Button,
   Grid,
-  Card,
-  CardMedia,
-  CardContent,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import priceComparisonLogo from "../utils/Images/priceComparison.png";
 import backgroundImage from "../utils/Images/image.png";
-import { callApi } from "../apis/api";
-import searchApiResponse from "../mockups/searchApiResponse";
+import { callApi, callmock } from "../apis/api";
+import SearchBar from "../components/SearchBar";
+import ProductCard from "../components/ProductCard";
+import Filters from "../components/Filters";
+import { useNavigate } from "react-router-dom";
+
 export default function PriceTracker() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productName, setProductName] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+  const [sortOption, setSortOption] = useState("priceLowHigh");
+  const [useMock, setUseMock] = useState(true);
+  const navigate = useNavigate();
+
+  const websiteNames = ["Amazon", "Flipkart", "Croma", "Reliance Digital", "Samsung India"];
 
   const handleSearch = async () => {
     setLoading(true);
     setHasSearched(true);
-    const productName = "Samsung Galaxy S25"; // Replace with dynamic input
-    const websiteNames = [
-      "Amazon",
-      "Flipkart",
-      "Croma",
-      "Reliance Digital",
-      "Samsung India",
-    ];
-
-    // Filter mock data based on partial match
-    const results = searchApiResponse.filter((product) =>
-      product.productName.toLowerCase().includes(productName.toLowerCase())
-    );
-
-    console.log(results); // Debugging: Check filtered results
+    const results = useMock
+      ? await callmock(productName, websiteNames)
+      : await callApi(productName, websiteNames);
     setSearchResults(results);
     setLoading(false);
   };
+
+  const addToWishlist = (product) => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const exists = wishlist.some(item => item.productUrl === product.productUrl);
+    if (!exists) {
+      wishlist.push(product);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }
+  };
+
+  const sortedResults = [...searchResults].sort((a, b) => {
+    if (sortOption === "priceLowHigh") return parseInt(a.price) - parseInt(b.price);
+    if (sortOption === "priceHighLow") return parseInt(b.price) - parseInt(a.price);
+    if (sortOption === "ratingHighLow") return parseFloat(b.rating || 0) - parseFloat(a.rating || 0);
+    return 0;
+  });
 
   return (
     <Box
@@ -52,134 +59,49 @@ export default function PriceTracker() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
         padding: 4,
         backgroundImage: `url('${backgroundImage}')`,
-        backgroundSize: "cover", // Ensures the image covers the entire viewport
-        backgroundPosition: "center", // Centers the image
-        backgroundRepeat: "no-repeat", // Prevents the image from repeating
-        overflow: "hidden", // Prevents scrollbars
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        overflow: "hidden",
       }}
     >
-      {/* Header */}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 4,
-        }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          <Box
-            component="img"
-            src={priceComparisonLogo}
-            alt="Price Tracker Logo"
-            sx={{
-              width: 32,
-              height: 32,
-              marginRight: 1,
-            }}
-          />
+      <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 4 }}>
+        <Typography variant="h5" fontWeight="bold" sx={{ display: "flex", alignItems: "center" }}>
+          <Box component="img" src={priceComparisonLogo} alt="Price Tracker Logo" sx={{ width: 32, height: 32, marginRight: 1 }} />
           PRICE TRACKER
         </Typography>
       </Box>
 
-      {/* Search Bar */}
-      <Paper
-        elevation={3}
-        sx={{
-          width: "100%",
-          maxWidth: 600,
-          padding: 2,
-          borderRadius: "16px",
-          marginBottom: 4,
-          backgroundColor: "rgba(255, 255, 255, 0.7)", // Transparent white background
-          backdropFilter: "blur(10px)", // Adds a blur effect to the background
-        }}
-      >
-        <TextField
-          placeholder="Search for a product..."
-          variant="outlined"
-          fullWidth
-          value={productName} // Bind input value to state
-          onChange={(e) => {
-            const value = e.target.value;
-            setProductName(value);
-            if (value.trim() === "") {
-              setSearchResults([]);
-              setHasSearched(false);
-            }
-          }}
-          // Update state on input change
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.5)", // Slightly transparent background for the input field
-            borderRadius: "8px",
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            marginTop: 2,
-            backgroundColor: "#007BFF", // Adjust button color to match the theme
-            "&:hover": {
-              backgroundColor: "#0056b3", // Darker shade on hover
-            },
-          }}
-          onClick={handleSearch}
-        >
+      <Paper elevation={3} sx={{ width: "100%", maxWidth: 600, padding: 2, borderRadius: "16px", marginBottom: 2, backgroundColor: "rgba(255, 255, 255, 0.7)", backdropFilter: "blur(10px)" }}>
+        <SearchBar productName={productName} setProductName={setProductName} />
+        <Button variant="contained" color="primary" sx={{ marginTop: 2 }} onClick={handleSearch}>
           Search
         </Button>
       </Paper>
 
-      {/* Search Results */}
-      {/* Search Results */}
+      <Box sx={{ display: "flex", gap: 2, marginBottom: 2 }}>
+        <Button variant="outlined" onClick={() => navigate("/wishlist")}>
+          Go to Wishlist
+        </Button>
+        <Button variant="outlined" onClick={() => navigate("/price-history")}>
+          View Price History
+        </Button>
+      </Box>
 
-      {hasSearched && searchResults.length === 0 ? (
-        <Typography variant="h6">
-          No results found. Please try again.
-        </Typography>
+      <Filters sortOption={sortOption} setSortOption={setSortOption} useMock={useMock} setUseMock={setUseMock} />
+
+      {hasSearched && sortedResults.length === 0 ? (
+        <Typography variant="h6">No results found. Please try again.</Typography>
       ) : (
         <Grid container spacing={2} sx={{ maxWidth: 1200 }}>
-          {searchResults.map((result, index) => (
+          {sortedResults.map((result, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={result.imageUrls ? result.imageUrls[0] : ""}
-                  alt={result.productName}
-                />
-                <CardContent>
-                  <Typography variant="h6">{result.productName}</Typography>
-                  <Typography variant="body2">Price: {result.price}</Typography>
-                  <Typography variant="body2">
-                    Rating: {result.rating || "N/A"}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    href={result.productUrl}
-                    target="_blank"
-                  >
-                    View Product
-                  </Button>
-                </CardContent>
-              </Card>
+              <ProductCard
+                result={result}
+                onAddToWishlist={addToWishlist}
+              />
             </Grid>
           ))}
         </Grid>
