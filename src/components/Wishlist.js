@@ -90,8 +90,7 @@ export default function Wishlist() {
               />
               <CardContent>
                 <Typography variant="h6">{item.productName}</Typography>
-                <Typography variant="body2">Price: {item.price}</Typography>
-                <Typography variant="body2">Rating: {item.rating}</Typography>
+                <Typography variant="body2">Price: {item.price},  Rating: {item.rating},  Website: {item.site}</Typography>
                 <Button
                   variant="contained"
                   href={item.productUrl}

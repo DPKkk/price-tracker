@@ -19,9 +19,9 @@ export default function ProductCard({ result, onAddToWishlist, isWishlisted }) {
       />
       <CardContent>
         <Typography variant="h6">{result.productName}</Typography>
-        <Typography variant="body2">Price: {result.price}</Typography>
         <Typography variant="body2">
-          Rating: {result.rating || "N/A"}
+          Price: {result.price}, Rating: {result.rating || "N/A"}, Website:{" "}
+          {result.site || "N/A"}
         </Typography>
         <Box sx={{ display: "flex", gap: 1, marginTop: 1 }}>
           <Button

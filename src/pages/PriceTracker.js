@@ -157,7 +157,12 @@ export default function PriceTracker() {
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
         }}
       >
-        <SearchBar productName={productName} setProductName={setProductName} />
+        <SearchBar
+          productName={productName}
+          setProductName={setProductName}
+          onSearch={handleSearch}
+        />
+
         <Button
           variant="contained"
           sx={{ marginTop: 2, backgroundColor: "#1976d2", color: "#fff" }}

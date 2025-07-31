@@ -1,8 +1,19 @@
 import React from "react";
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
 
-export default function SearchBar({ productName, setProductName }) {
+export default function SearchBar({ productName, setProductName, onSearch }) {
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      onSearch();
+    }
+  };
+
+  const handleClear = () => {
+    setProductName("");
+  };
+
   return (
     <TextField
       placeholder="Search for a product..."
@@ -10,10 +21,18 @@ export default function SearchBar({ productName, setProductName }) {
       fullWidth
       value={productName}
       onChange={(e) => setProductName(e.target.value)}
+      onKeyPress={handleKeyPress}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
             <SearchIcon color="action" />
+          </InputAdornment>
+        ),
+        endAdornment: productName && (
+          <InputAdornment position="end">
+            <IconButton onClick={handleClear}>
+              <ClearIcon />
+            </IconButton>
           </InputAdornment>
         ),
       }}
