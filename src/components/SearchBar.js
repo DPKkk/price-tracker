@@ -3,7 +3,7 @@ import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 
-export default function SearchBar({ productName, setProductName, onSearch }) {
+export default function SearchBar({ productName, setProductName, onSearch, handleInputChange }) {
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       onSearch();
@@ -20,7 +20,10 @@ export default function SearchBar({ productName, setProductName, onSearch }) {
       variant="outlined"
       fullWidth
       value={productName}
-      onChange={(e) => setProductName(e.target.value)}
+      onChange={(e) => {
+        setProductName(e.target.value);
+        handleInputChange(e.target.value); // Notify parent about input change
+      }}
       onKeyPress={handleKeyPress}
       InputProps={{
         startAdornment: (
